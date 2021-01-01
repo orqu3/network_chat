@@ -75,6 +75,25 @@ public class ClientHandler {
                                 break;
                             }
 
+                            if (str.startsWith("/chnick")) {
+                                String[] token = str.split(" ", 2);
+                                if (token.length < 2) {
+                                    continue;
+                                }
+                                if (token[1].contains(" ")) {
+                                    sendMsg("Nickname cannot contain spaces");
+                                    continue;
+                                }
+                                if (server.getAuthService().changeNick(this.nickname, token[1])) {
+                                    sendMsg("/yournickis " + token[1]);
+                                    sendMsg("Your nickname has been changed to " + token[1]);
+                                    this.nickname = token[1];
+                                    server.broadcastClientList();
+                                } else {
+                                    sendMsg("Failed to change nickname. Nickname " + token[1] + " already exists");
+                                }
+                            }
+
                         } else {
                             server.broadcastMsg(this, str);
                         }

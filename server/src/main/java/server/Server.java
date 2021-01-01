@@ -12,12 +12,18 @@ public class Server {
     private Socket socket;
     private final int PORT = 8189;
     private final List<ClientHandler> clients;
-    private final AuthService authService;
+    private AuthService authService;
 
     public Server() {
 
         clients = new CopyOnWriteArrayList<>();
         authService = new SimpleAuthService();
+
+        if (!SQLHandler.connect()) {
+            throw new RuntimeException("Failed to connect to database");
+        }
+
+        authService = new DBAuthService();
 
         try {
             server = new ServerSocket(PORT);
@@ -32,6 +38,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            SQLHandler.disconnect();
             System.out.println("server closed");
             try {
                 server.close();
@@ -78,16 +85,16 @@ public class Server {
         return authService;
     }
 
-    public boolean isloginAuthenticated(String login){
+    public boolean isloginAuthenticated(String login) {
         for (ClientHandler c : clients) {
-            if(c.getLogin().equals(login)){
+            if (c.getLogin().equals(login)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void broadcastClientList(){
+    public void broadcastClientList() {
         StringBuilder sb = new StringBuilder("/clientlist ");
         for (ClientHandler c : clients) {
             sb.append(c.getNickname()).append(" ");
