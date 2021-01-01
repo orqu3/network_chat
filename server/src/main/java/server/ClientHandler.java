@@ -70,6 +70,10 @@ public class ClientHandler {
                                 }
                                 server.privateMsg(this, token[1], token[2]);
                             }
+                            if (str.equals("/end")) {
+                                out.writeUTF("/end");
+                                break;
+                            }
 
                         } else {
                             server.broadcastMsg(this, str);
