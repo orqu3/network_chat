@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+.idea
+network_chat_db.db
+# Project exclude paths
+/client/target/
+/server/target/
