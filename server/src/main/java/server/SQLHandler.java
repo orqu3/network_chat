@@ -21,7 +21,7 @@ public class SQLHandler {
     }
 
     private static void prepareAllStatements() throws SQLException {
-        psChangeNick = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
+        psGetNickname = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
         psRegistration = connection.prepareStatement("INSERT INTO users (login, password, nickname) VALUES (?, ?, ?);");
         psChangeNick = connection.prepareStatement("UPDATE users SET nickname = ? WHERE nickname = ?;");
     }
