@@ -7,3 +7,4 @@ network_chat_db.db
 /client/target/
 /server/target/
 identifier.sqlite
+chatHistory.txt
