@@ -16,14 +16,13 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+
     @FXML
     private TextArea textArea;
     @FXML
@@ -117,7 +116,6 @@ public class Controller implements Initializable {
                         }
                     }
 
-                    //Цикл работы
                     while (true) {
                         String str = in.readUTF();
                         if (str.startsWith("/")) {
@@ -134,13 +132,14 @@ public class Controller implements Initializable {
                                 break;
                             }
 
-                            if(str.startsWith("/yournickis ")) {
+                            if (str.startsWith("/yournickis ")) {
                                 nickname = str.split(" ")[1];
                                 setTitle(nickname);
                             }
 
                         } else {
                             textArea.appendText(str + "\n");
+                            saveChatHistory();
                         }
                     }
                 } catch (IOException e) {
@@ -238,5 +237,23 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
     }
+
+    private void saveChatHistory() throws IOException {
+        try {
+            File chatHistory = new File("chatHistory.txt");
+            if (!chatHistory.exists()) {
+                chatHistory.createNewFile();
+            }
+            PrintWriter fileWriter = new PrintWriter(new FileWriter(chatHistory, false));
+
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(textArea.getText());
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
 
